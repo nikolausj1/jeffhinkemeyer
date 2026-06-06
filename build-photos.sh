@@ -118,10 +118,16 @@ fi
 
 # Regenerate the images[] array in script.js (between 'const images = [' and '];').
 python3 - "$JS" "${gallery[@]+"${gallery[@]}"}" <<'PY'
-import sys, re
+import sys, re, random
 
 js_path = sys.argv[1]
 names = sys.argv[2:]
+
+# Shuffle so newly-added photos are mixed throughout the gallery rather than
+# clustered at the end. A fixed seed keeps the order stable across reruns of the
+# same photo set (it only re-mixes when photos are added or removed).
+random.seed(len(names) * 7919 + sum(ord(c) for n in names for c in n))
+random.shuffle(names)
 
 with open(js_path, encoding="utf-8") as fh:
     src = fh.read()
