@@ -1,0 +1,135 @@
+#!/usr/bin/env bash
+#
+# build-photos.sh — optimize photos and regenerate the gallery list.
+#
+# Reads photos from ../source photos, resizes + recompresses them into
+# ./images, and rewrites the images[] array in script.js to match.
+# Uses only macOS built-in tools (sips + python3) — no installs needed.
+#
+# Re-run this any time you add or replace photos in ../source photos:
+#     cd site && ./build-photos.sh
+#
+# A source file whose name contains "preview" or "hero" becomes the hero /
+# social-preview image (images/memorial-preview.jpg) and is kept out of the grid.
+
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SRC="$SCRIPT_DIR/../source photos"
+OUT="$SCRIPT_DIR/images"
+JS="$SCRIPT_DIR/script.js"
+
+MAXDIM=1600   # longest edge, in pixels
+QUALITY=80    # JPEG quality (low/normal/high/best or 0-100 via formatOptions)
+
+# Hero / social-preview image. Set this to a source filename to pin the hero,
+# or leave empty and instead name a source file with "preview"/"hero" in it.
+# The chosen photo becomes images/memorial-preview.jpg and is kept out of the grid.
+HERO_SOURCE="680125902_26748729401433625_7698045273332052504_n.jpg"
+
+if [ ! -d "$SRC" ]; then
+    echo "Source folder not found: $SRC" >&2
+    exit 1
+fi
+
+mkdir -p "$OUT"
+
+# Start clean so removed source photos don't linger in the gallery.
+find "$OUT" -type f \( -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.png' \) -delete
+
+shopt -s nullglob nocaseglob
+
+slugify() {
+    # lowercase, strip extension, replace non-alphanumerics with single dashes
+    local name="$1"
+    name="${name%.*}"
+    printf '%s' "$name" \
+        | tr '[:upper:]' '[:lower:]' \
+        | sed -E 's/[^a-z0-9]+/-/g; s/^-+//; s/-+$//'
+}
+
+gallery=()
+count=0
+hero_done=0
+
+for f in "$SRC"/*.jpg "$SRC"/*.jpeg "$SRC"/*.png; do
+    [ -e "$f" ] || continue
+    base="$(basename "$f")"
+    lower="$(printf '%s' "$base" | tr '[:upper:]' '[:lower:]')"
+
+    # Route the designated hero source (or any preview/hero-named file) to the hero image.
+    if [[ -n "$HERO_SOURCE" && "$base" == "$HERO_SOURCE" ]] \
+        || [[ "$lower" == *preview* || "$lower" == *hero* ]]; then
+        if sips --resampleHeightWidthMax "$MAXDIM" \
+                -s format jpeg -s formatOptions "$QUALITY" \
+                "$f" --out "$OUT/memorial-preview.jpg" >/dev/null 2>&1 \
+                && [ -f "$OUT/memorial-preview.jpg" ]; then
+            hero_done=1
+            echo "  hero  -> images/memorial-preview.jpg"
+        else
+            echo "  SKIPPED (unreadable): $base" >&2
+        fi
+        continue
+    fi
+
+    slug="$(slugify "$base")"
+    ext="jpg"
+    case "$lower" in
+        *.png) ext="png" ;;
+    esac
+    out_name="${slug}.${ext}"
+
+    # Avoid collisions from different sources slugging to the same name.
+    if [ -e "$OUT/$out_name" ]; then
+        out_name="${slug}-$((count)).${ext}"
+    fi
+
+    if [ "$ext" = "png" ]; then
+        sips --resampleHeightWidthMax "$MAXDIM" \
+             "$f" --out "$OUT/$out_name" >/dev/null 2>&1 || true
+    else
+        sips --resampleHeightWidthMax "$MAXDIM" \
+             -s format jpeg -s formatOptions "$QUALITY" \
+             "$f" --out "$OUT/$out_name" >/dev/null 2>&1 || true
+    fi
+
+    # Only list photos that actually produced an output file.
+    if [ -f "$OUT/$out_name" ]; then
+        gallery+=("$out_name")
+        count=$((count + 1))
+    else
+        echo "  SKIPPED (unreadable): $base" >&2
+    fi
+done
+
+echo "Processed $count gallery photo(s)."
+if [ "$hero_done" -eq 0 ]; then
+    echo "  (no preview/hero source found — images/memorial-preview.jpg unchanged)"
+fi
+
+# Regenerate the images[] array in script.js (between 'const images = [' and '];').
+python3 - "$JS" "${gallery[@]+"${gallery[@]}"}" <<'PY'
+import sys, re
+
+js_path = sys.argv[1]
+names = sys.argv[2:]
+
+with open(js_path, encoding="utf-8") as fh:
+    src = fh.read()
+
+body = "".join(f'    "{n}",\n' for n in names)
+new_block = "const images = [\n" + body + "];"
+
+pattern = re.compile(r"const images = \[.*?\];", re.S)
+if not pattern.search(src):
+    sys.exit("Could not find 'const images = [...]' block in script.js")
+
+src = pattern.sub(new_block, src, count=1)
+
+with open(js_path, "w", encoding="utf-8") as fh:
+    fh.write(src)
+
+print(f"Wrote {len(names)} entries into {js_path}")
+PY
+
+echo "Done."

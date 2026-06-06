@@ -1,0 +1,441 @@
+/* Global Styles */
+:root {
+    --primary-color: #333333;
+    --secondary-color: #666666;
+    --accent-color: #C5A059;
+    /* Muted Gold */
+    --bg-color: #F9F9F9;
+    --card-bg: #FFFFFF;
+    --font-heading: 'Playfair Display', serif;
+    --font-body: 'Lato', sans-serif;
+    --spacing-unit: 1rem;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: var(--font-body);
+    background-color: var(--bg-color);
+    color: var(--primary-color);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* Typography */
+h1,
+h2,
+h3 {
+    font-family: var(--font-heading);
+    font-weight: 400;
+}
+
+a {
+    color: var(--accent-color);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+a:hover {
+    color: var(--primary-color);
+}
+
+/* Layout */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Header / Hero */
+/* Header / Hero */
+/* Hero Header */
+.hero-header {
+    background-color: var(--card-bg);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    padding: 80px 0;
+}
+
+.hero-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: center;
+}
+
+/* Visual Column */
+.hero-visual {
+    width: 100%;
+    position: relative;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+    aspect-ratio: 4/3;
+    /* or adjust based on image */
+}
+
+.hero-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+/* Content Column */
+.hero-content {
+    text-align: left;
+    padding-right: 20px;
+}
+
+.intro-text {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    color: #8C6A3E;
+    /* Gold/Bronze accent */
+    margin-bottom: 20px;
+    display: block;
+    font-weight: 600;
+}
+
+h1.name {
+    font-size: 4rem;
+    margin-bottom: 25px;
+    color: var(--primary-color);
+    line-height: 1.1;
+}
+
+.dates {
+    font-size: 0.95rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--secondary-color);
+    margin-bottom: 30px;
+    font-weight: 600;
+    font-style: normal;
+}
+
+.tribute {
+    color: var(--primary-color);
+    font-size: 1.1rem;
+    line-height: 1.6;
+    max-width: 100%;
+    margin: 0;
+}
+
+/* Life Story */
+.story-section {
+    padding: 70px 0 10px;
+}
+
+.story-content {
+    max-width: 760px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.story-content .card-subtitle {
+    text-align: center;
+}
+
+.story-content h2 {
+    font-family: var(--font-heading);
+    font-size: 2rem;
+    font-weight: 400;
+    color: var(--primary-color);
+    margin-bottom: 30px;
+}
+
+.story-content p {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: var(--secondary-color);
+    margin-bottom: 22px;
+    text-align: left;
+}
+
+.story-content p:last-child {
+    margin-bottom: 0;
+}
+
+/* Gallery Grid */
+.gallery-section {
+    padding: 60px 0;
+}
+
+.gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+}
+
+.gallery-item {
+    position: relative;
+    overflow: hidden;
+    background-color: #eee;
+    padding-top: 100%;
+    /* 1:1 Aspect Ratio Square */
+    cursor: pointer;
+    border-radius: 4px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.gallery-item img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.gallery-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.gallery-item:hover img {
+    transform: scale(1.05);
+}
+
+/* Lightbox */
+.lightbox {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background-color: rgba(255, 255, 255, 0.98);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.lightbox.active {
+    opacity: 1;
+}
+
+.lightbox-content-wrapper {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.lightbox-img {
+    max-height: 90vh;
+    max-width: 95vw;
+    object-fit: contain;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+    border-radius: 2px;
+}
+
+.close-btn {
+    position: absolute;
+    top: 30px;
+    right: 40px;
+    font-size: 40px;
+    color: var(--email-color, #333);
+    cursor: pointer;
+    z-index: 1002;
+    transition: color 0.2s;
+    font-family: var(--font-heading);
+    line-height: 0.5;
+}
+
+.close-btn:hover {
+    color: var(--accent-color);
+}
+
+.nav-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 30px;
+    color: #333;
+    cursor: pointer;
+    z-index: 1001;
+    padding: 20px;
+    transition: color 0.2s;
+    background: none;
+    border: none;
+}
+
+.nav-btn:hover {
+    color: var(--accent-color);
+}
+
+.prev-btn {
+    left: 20px;
+}
+
+.next-btn {
+    right: 20px;
+}
+
+/* Service Details & Memorials */
+.details-section {
+    padding-bottom: 80px;
+}
+
+.details-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+}
+
+.details-card {
+    background-color: var(--card-bg);
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.03);
+}
+
+.card-subtitle {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #8C6A3E;
+    display: block;
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+.details-card h2 {
+    font-size: 1.5rem;
+    margin-bottom: 25px;
+    color: var(--primary-color);
+}
+
+.detail-item {
+    margin-bottom: 20px;
+}
+
+.detail-item:last-child {
+    margin-bottom: 0;
+}
+
+.detail-label {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--secondary-color);
+    display: block;
+    margin-bottom: 5px;
+}
+
+.detail-item p {
+    font-size: 1rem;
+    color: var(--primary-color);
+}
+
+.memorial-text {
+    margin-bottom: 25px;
+    color: var(--secondary-color);
+}
+
+.memorial-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.btn-memorial {
+    display: inline-block;
+    padding: 10px 20px;
+    border: 1px solid #E0E0E0;
+    border-radius: 50px;
+    color: #555;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+}
+
+.btn-memorial:hover {
+    border-color: var(--accent-color);
+    color: var(--accent-color);
+    background-color: rgba(197, 160, 89, 0.05);
+}
+
+/* Obituary Link Section */
+.obituary-link-section {
+    text-align: center;
+    padding-bottom: 60px;
+}
+
+.btn-obituary {
+    display: inline-block;
+    padding: 12px 30px;
+    background-color: var(--primary-color);
+    color: #fff;
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.btn-obituary:hover {
+    background-color: var(--accent-color);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+    color: #fff;
+}
+
+/* Footer */
+footer {
+    text-align: center;
+    padding: 40px 0;
+    margin-top: 40px;
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+    color: var(--secondary-color);
+    font-size: 0.9rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    h1.name {
+        font-size: 2.5rem;
+    }
+
+    .hero-grid {
+        grid-template-columns: 1fr;
+        gap: 30px;
+        text-align: center;
+    }
+
+    .hero-content {
+        padding-right: 0;
+        text-align: center;
+    }
+
+    .gallery-grid {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 10px;
+    }
+
+    .details-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .details-card {
+        padding: 30px 20px;
+    }
+
+    .prev-btn {
+        left: 10px;
+    }
+
+    .next-btn {
+        right: 10px;
+    }
+}
