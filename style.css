@@ -431,13 +431,6 @@ h1.name {
     line-height: 1;
 }
 
-.slideshow-hint {
-    margin-top: 14px;
-    font-size: 0.8rem;
-    color: var(--secondary-color);
-    letter-spacing: 0.5px;
-}
-
 /* Slideshow mode: clean, distraction-free full-screen display */
 .lightbox.slideshow-mode .nav-btn {
     display: none;
