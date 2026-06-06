@@ -22,10 +22,15 @@ JS="$SCRIPT_DIR/script.js"
 MAXDIM=1600   # longest edge, in pixels
 QUALITY=80    # JPEG quality (low/normal/high/best or 0-100 via formatOptions)
 
-# Hero / social-preview image. Set this to a source filename to pin the hero,
-# or leave empty and instead name a source file with "preview"/"hero" in it.
-# The chosen photo becomes images/memorial-preview.jpg and is kept out of the grid.
+# Hero / social-preview image.
+#   HERO_SOURCE     - a source filename to keep OUT of the gallery grid (it's the hero).
+#                     Leave empty and instead name a source file with "preview"/"hero"
+#                     in it to auto-detect.
+#   REGENERATE_HERO - true:  (re)build images/memorial-preview.jpg from HERO_SOURCE.
+#                     false: leave images/memorial-preview.jpg untouched, so a hero you
+#                            hand-edited/cropped yourself is preserved across rebuilds.
 HERO_SOURCE="680125902_26748729401433625_7698045273332052504_n.jpg"
+REGENERATE_HERO=false
 
 if [ ! -d "$SRC" ]; then
     echo "Source folder not found: $SRC" >&2
@@ -35,7 +40,9 @@ fi
 mkdir -p "$OUT"
 
 # Start clean so removed source photos don't linger in the gallery.
-find "$OUT" -type f \( -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.png' \) -delete
+# Never delete the hero here — a hand-edited memorial-preview.jpg must survive.
+find "$OUT" -type f \( -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.png' \) \
+    ! -name 'memorial-preview.jpg' -delete
 
 shopt -s nullglob nocaseglob
 
@@ -58,9 +65,13 @@ for f in "$SRC"/*.jpg "$SRC"/*.jpeg "$SRC"/*.png; do
     lower="$(printf '%s' "$base" | tr '[:upper:]' '[:lower:]')"
 
     # Route the designated hero source (or any preview/hero-named file) to the hero image.
+    # Either way the photo is kept OUT of the gallery grid (it's the hero).
     if [[ -n "$HERO_SOURCE" && "$base" == "$HERO_SOURCE" ]] \
         || [[ "$lower" == *preview* || "$lower" == *hero* ]]; then
-        if sips --resampleHeightWidthMax "$MAXDIM" \
+        if [ "$REGENERATE_HERO" != "true" ]; then
+            echo "  hero  -> keeping existing images/memorial-preview.jpg (REGENERATE_HERO=false)"
+            hero_done=1
+        elif sips --resampleHeightWidthMax "$MAXDIM" \
                 -s format jpeg -s formatOptions "$QUALITY" \
                 "$f" --out "$OUT/memorial-preview.jpg" >/dev/null 2>&1 \
                 && [ -f "$OUT/memorial-preview.jpg" ]; then
