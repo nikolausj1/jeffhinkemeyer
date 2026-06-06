@@ -25,7 +25,7 @@ QUALITY=80    # JPEG quality (low/normal/high/best or 0-100 via formatOptions)
 # Hero / social-preview image. Set this to a source filename to pin the hero,
 # or leave empty and instead name a source file with "preview"/"hero" in it.
 # The chosen photo becomes images/memorial-preview.jpg and is kept out of the grid.
-HERO_SOURCE="477825932_1950456752143737_2038986121059667914_n.jpg"
+HERO_SOURCE="680125902_26748729401433625_7698045273332052504_n.jpg"
 
 if [ ! -d "$SRC" ]; then
     echo "Source folder not found: $SRC" >&2
