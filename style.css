@@ -390,6 +390,57 @@ h1.name {
     color: #fff;
 }
 
+/* Slideshow */
+.slideshow-section {
+    text-align: center;
+    padding-bottom: 70px;
+}
+
+.btn-slideshow {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 34px;
+    background-color: var(--accent-color);
+    color: #fff;
+    border: none;
+    border-radius: 50px;
+    font-family: var(--font-body);
+    font-weight: 700;
+    font-size: 1rem;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(197, 160, 89, 0.35);
+}
+
+.btn-slideshow:hover {
+    background-color: var(--primary-color);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.18);
+}
+
+.btn-slideshow .play-icon {
+    font-size: 0.85rem;
+    line-height: 1;
+}
+
+.slideshow-hint {
+    margin-top: 14px;
+    font-size: 0.8rem;
+    color: var(--secondary-color);
+    letter-spacing: 0.5px;
+}
+
+/* Slideshow mode: clean, distraction-free full-screen display */
+.lightbox.slideshow-mode .nav-btn {
+    display: none;
+}
+
+.lightbox.slideshow-mode .lightbox-img {
+    transition: opacity 0.6s ease;
+}
+
 /* Footer */
 footer {
     text-align: center;
