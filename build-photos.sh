@@ -29,8 +29,8 @@ QUALITY=80    # JPEG quality (low/normal/high/best or 0-100 via formatOptions)
 #   REGENERATE_HERO - true:  (re)build images/memorial-preview.jpg from HERO_SOURCE.
 #                     false: leave images/memorial-preview.jpg untouched, so a hero you
 #                            hand-edited/cropped yourself is preserved across rebuilds.
-HERO_SOURCE="680125902_26748729401433625_7698045273332052504_n.jpg"
-REGENERATE_HERO=false
+HERO_SOURCE="hero.png"
+REGENERATE_HERO=true
 
 if [ ! -d "$SRC" ]; then
     echo "Source folder not found: $SRC" >&2
