@@ -73,7 +73,7 @@ a:hover {
     border-radius: 20px;
     overflow: hidden;
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
-    aspect-ratio: 4/3;
+    aspect-ratio: 1/1;
     /* or adjust based on image */
 }
 
@@ -283,7 +283,7 @@ h1.name {
 
 /* Service Details & Memorials */
 .details-section {
-    padding-bottom: 80px;
+    padding: 50px 0 70px;
 }
 
 .details-grid {
@@ -365,10 +365,21 @@ h1.name {
     background-color: rgba(197, 160, 89, 0.05);
 }
 
-/* Obituary Link Section */
-.obituary-link-section {
-    text-align: center;
-    padding-bottom: 60px;
+/* Actions row: obituary (left) + slideshow (right) */
+.actions-section {
+    padding: 10px 0 70px;
+}
+
+.actions-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 24px;
+    flex-wrap: wrap;
+}
+
+.slideshow-action {
+    text-align: right;
 }
 
 .btn-obituary {
@@ -391,11 +402,6 @@ h1.name {
 }
 
 /* Slideshow */
-.slideshow-section {
-    text-align: center;
-    padding-bottom: 70px;
-}
-
 .btn-slideshow {
     display: inline-flex;
     align-items: center;
@@ -488,5 +494,15 @@ footer {
 
     .next-btn {
         right: 10px;
+    }
+
+    .actions-row {
+        flex-direction: column;
+        align-items: center;
+        gap: 30px;
+    }
+
+    .slideshow-action {
+        text-align: center;
     }
 }

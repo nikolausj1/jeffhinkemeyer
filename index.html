@@ -87,14 +87,6 @@
             </div>
         </section>
 
-        <section class="gallery-section">
-            <div class="container">
-                <div id="gallery-grid" class="gallery-grid">
-                    <!-- Images will be populated by JS -->
-                </div>
-            </div>
-        </section>
-
         <section class="details-section">
             <div class="container">
                 <div class="details-grid">
@@ -146,19 +138,27 @@
             </div>
         </section>
 
-        <section class="obituary-link-section">
+        <section class="gallery-section">
             <div class="container">
-                <a href="https://www.danielfuneralhome.com/obit/jeffery-g-hinkemeyer/" target="_blank"
-                    rel="noopener noreferrer" class="btn-obituary">View Obituary at Daniel Funeral Home</a>
+                <div id="gallery-grid" class="gallery-grid">
+                    <!-- Images will be populated by JS -->
+                </div>
             </div>
         </section>
 
-        <section class="slideshow-section">
+        <section class="actions-section">
             <div class="container">
-                <button id="play-slideshow" class="btn-slideshow" type="button">
-                    <span class="play-icon" aria-hidden="true">&#9654;</span> Play Slideshow
-                </button>
-                <p class="slideshow-hint">Plays every photo on a loop &middot; press Esc or tap to exit</p>
+                <div class="actions-row">
+                    <a href="https://www.danielfuneralhome.com/obit/jeffery-g-hinkemeyer/" target="_blank"
+                        rel="noopener noreferrer" class="btn-obituary">View Obituary at Daniel Funeral Home</a>
+
+                    <div class="slideshow-action">
+                        <button id="play-slideshow" class="btn-slideshow" type="button">
+                            <span class="play-icon" aria-hidden="true">&#9654;</span> Play Slideshow
+                        </button>
+                        <p class="slideshow-hint">Plays every photo on a loop &middot; press Esc or tap to exit</p>
+                    </div>
+                </div>
             </div>
         </section>
     </main>
