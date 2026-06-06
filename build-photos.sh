@@ -22,10 +22,10 @@ JS="$SCRIPT_DIR/script.js"
 MAXDIM=1600   # longest edge, in pixels
 QUALITY=80    # JPEG quality (low/normal/high/best or 0-100 via formatOptions)
 
-# Hero / social-preview image.
-#   HERO_SOURCE     - a source filename to keep OUT of the gallery grid (it's the hero).
-#                     Leave empty and instead name a source file with "preview"/"hero"
-#                     in it to auto-detect.
+# Hero / social-preview image. The hero photo ALSO appears in the gallery grid
+# (and therefore the slideshow) — it is never excluded.
+#   HERO_SOURCE     - the source filename used to build the hero when REGENERATE_HERO
+#                     is true (or leave empty and name a source file "preview"/"hero").
 #   REGENERATE_HERO - true:  (re)build images/memorial-preview.jpg from HERO_SOURCE.
 #                     false: leave images/memorial-preview.jpg untouched, so a hero you
 #                            hand-edited/cropped yourself is preserved across rebuilds.
@@ -64,23 +64,21 @@ for f in "$SRC"/*.jpg "$SRC"/*.jpeg "$SRC"/*.png; do
     base="$(basename "$f")"
     lower="$(printf '%s' "$base" | tr '[:upper:]' '[:lower:]')"
 
-    # Route the designated hero source (or any preview/hero-named file) to the hero image.
-    # Either way the photo is kept OUT of the gallery grid (it's the hero).
-    if [[ -n "$HERO_SOURCE" && "$base" == "$HERO_SOURCE" ]] \
-        || [[ "$lower" == *preview* || "$lower" == *hero* ]]; then
-        if [ "$REGENERATE_HERO" != "true" ]; then
-            echo "  hero  -> keeping existing images/memorial-preview.jpg (REGENERATE_HERO=false)"
-            hero_done=1
-        elif sips --resampleHeightWidthMax "$MAXDIM" \
+    # When REGENERATE_HERO=true, (re)build memorial-preview.jpg from the matching
+    # source. The photo is NOT skipped — it falls through to the gallery below, so the
+    # hero photo also appears in the grid and the slideshow.
+    if [ "$REGENERATE_HERO" = "true" ] \
+        && { [[ -n "$HERO_SOURCE" && "$base" == "$HERO_SOURCE" ]] \
+             || [[ "$lower" == *preview* || "$lower" == *hero* ]]; }; then
+        if sips --resampleHeightWidthMax "$MAXDIM" \
                 -s format jpeg -s formatOptions "$QUALITY" \
                 "$f" --out "$OUT/memorial-preview.jpg" >/dev/null 2>&1 \
                 && [ -f "$OUT/memorial-preview.jpg" ]; then
             hero_done=1
-            echo "  hero  -> images/memorial-preview.jpg"
+            echo "  hero  -> images/memorial-preview.jpg (also kept in gallery)"
         else
-            echo "  SKIPPED (unreadable): $base" >&2
+            echo "  SKIPPED hero (unreadable): $base" >&2
         fi
-        continue
     fi
 
     slug="$(slugify "$base")"

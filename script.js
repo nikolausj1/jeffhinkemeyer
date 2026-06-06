@@ -14,6 +14,7 @@ const images = [
     "652341474-10239075160875201-5211773503527440892-n.jpg",
     "678233829-1415378627295802-6765771274895789683-n.jpg",
     "679180417-26748729891433576-3530404346790995994-n.jpg",
+    "680125902-26748729401433625-7698045273332052504-n.jpg",
     "681118778-26748730541433511-8365708696010792109-n.jpg",
     "681296171-1415378623962469-3337492188158726545-n.jpg",
     "682387043-26748730284766870-5410950613876766734-n.jpg",
@@ -33,9 +34,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const nextBtn = document.querySelector('.next-btn');
     const playBtn = document.getElementById('play-slideshow');
 
-    // The lightbox shows one of two lists: the gallery (default), or the
-    // slideshow, which also includes the hero portrait as its first photo.
-    const slideshowImages = ['memorial-preview.jpg', ...images];
+    // The slideshow plays the full gallery (the hero photo is included in the
+    // gallery, so it appears here too — no need to prepend it separately).
+    const slideshowImages = images;
     let activeList = images;
     let currentIndex = 0;
 
