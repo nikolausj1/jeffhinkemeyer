@@ -353,6 +353,12 @@ h1.name {
     max-width: 280px;
     height: auto;
     border-radius: 6px;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.memorial-logo a:hover img {
+    opacity: 0.85;
+    transform: translateY(-2px);
 }
 
 .memorial-buttons {
