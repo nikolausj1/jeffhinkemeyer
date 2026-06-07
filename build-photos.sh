@@ -33,9 +33,14 @@ HERO_SOURCE="hero.png"
 REGENERATE_HERO=true
 
 # Logo image used in the page (not the gallery). The matching source is rendered
-# small to images/memorial-logo.jpg and kept out of the gallery grid.
-LOGO_SOURCE="memorial.jpg"
+# small to images/memorial-logo.png (PNG keeps any transparency) and kept out of
+# the gallery grid. LOGO_SOURCE must be written lowercase (matched case-insensitively).
+LOGO_SOURCE="memorial_white.png"
 LOGO_MAXDIM=900
+
+# Source files to ignore completely — not the gallery, not the hero, not the logo.
+# Use for leftover/superseded assets. Lowercase names, matched case-insensitively.
+IGNORE_SOURCES=("memorial.jpg")
 
 if [ ! -d "$SRC" ]; then
     echo "Source folder not found: $SRC" >&2
@@ -47,7 +52,7 @@ mkdir -p "$OUT"
 # Start clean so removed source photos don't linger in the gallery.
 # Never delete the hero here — a hand-edited memorial-preview.jpg must survive.
 find "$OUT" -type f \( -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.png' \) \
-    ! -name 'memorial-preview.jpg' ! -name 'memorial-logo.jpg' -delete
+    ! -name 'memorial-preview.jpg' ! -name 'memorial-logo.png' -delete
 
 shopt -s nullglob nocaseglob
 
@@ -69,14 +74,24 @@ for f in "$SRC"/*.jpg "$SRC"/*.jpeg "$SRC"/*.png; do
     base="$(basename "$f")"
     lower="$(printf '%s' "$base" | tr '[:upper:]' '[:lower:]')"
 
-    # Route the logo source to images/memorial-logo.jpg and keep it out of the gallery.
-    # Match case-insensitively (LOGO_SOURCE must be written lowercase).
+    # Skip ignored source files entirely.
+    skip=0
+    for ex in "${IGNORE_SOURCES[@]}"; do
+        [[ "$lower" == "$ex" ]] && { skip=1; break; }
+    done
+    if [ "$skip" -eq 1 ]; then
+        echo "  skip  -> $base (ignored)"
+        continue
+    fi
+
+    # Route the logo source to images/memorial-logo.png (PNG preserves transparency)
+    # and keep it out of the gallery. Match case-insensitively.
     if [[ -n "$LOGO_SOURCE" && "$lower" == "$LOGO_SOURCE" ]]; then
         if sips --resampleHeightWidthMax "$LOGO_MAXDIM" \
-                -s format jpeg -s formatOptions "$QUALITY" \
-                "$f" --out "$OUT/memorial-logo.jpg" >/dev/null 2>&1 \
-                && [ -f "$OUT/memorial-logo.jpg" ]; then
-            echo "  logo  -> images/memorial-logo.jpg"
+                -s format png \
+                "$f" --out "$OUT/memorial-logo.png" >/dev/null 2>&1 \
+                && [ -f "$OUT/memorial-logo.png" ]; then
+            echo "  logo  -> images/memorial-logo.png"
         else
             echo "  SKIPPED logo (unreadable): $base" >&2
         fi
