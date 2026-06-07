@@ -161,6 +161,30 @@ h1.name {
     margin-bottom: 0;
 }
 
+/* Pull quote — emotional centerpiece that breaks up the story */
+.pull-quote {
+    max-width: 820px;
+    margin: 50px auto;
+    padding: 0 20px;
+    text-align: center;
+    font-family: var(--font-heading);
+    font-size: 2rem;
+    line-height: 1.4;
+    font-style: italic;
+    color: var(--primary-color);
+}
+
+.pull-quote::before {
+    content: "\201C";
+    display: block;
+    font-family: var(--font-heading);
+    font-size: 4.5rem;
+    line-height: 0.2;
+    margin-top: 30px;
+    margin-bottom: 28px;
+    color: var(--accent-color);
+}
+
 /* Gallery Grid */
 .gallery-section {
     padding: 60px 0;
@@ -516,5 +540,14 @@ footer {
 
     .slideshow-action {
         text-align: center;
+    }
+
+    .pull-quote {
+        font-size: 1.45rem;
+        margin: 35px auto;
+    }
+
+    .pull-quote::before {
+        font-size: 3.5rem;
     }
 }
