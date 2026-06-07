@@ -32,6 +32,11 @@ QUALITY=80    # JPEG quality (low/normal/high/best or 0-100 via formatOptions)
 HERO_SOURCE="hero.png"
 REGENERATE_HERO=true
 
+# Logo image used in the page (not the gallery). The matching source is rendered
+# small to images/memorial-logo.jpg and kept out of the gallery grid.
+LOGO_SOURCE="memorial.jpg"
+LOGO_MAXDIM=900
+
 if [ ! -d "$SRC" ]; then
     echo "Source folder not found: $SRC" >&2
     exit 1
@@ -42,7 +47,7 @@ mkdir -p "$OUT"
 # Start clean so removed source photos don't linger in the gallery.
 # Never delete the hero here — a hand-edited memorial-preview.jpg must survive.
 find "$OUT" -type f \( -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.png' \) \
-    ! -name 'memorial-preview.jpg' -delete
+    ! -name 'memorial-preview.jpg' ! -name 'memorial-logo.jpg' -delete
 
 shopt -s nullglob nocaseglob
 
@@ -64,11 +69,25 @@ for f in "$SRC"/*.jpg "$SRC"/*.jpeg "$SRC"/*.png; do
     base="$(basename "$f")"
     lower="$(printf '%s' "$base" | tr '[:upper:]' '[:lower:]')"
 
+    # Route the logo source to images/memorial-logo.jpg and keep it out of the gallery.
+    # Match case-insensitively (LOGO_SOURCE must be written lowercase).
+    if [[ -n "$LOGO_SOURCE" && "$lower" == "$LOGO_SOURCE" ]]; then
+        if sips --resampleHeightWidthMax "$LOGO_MAXDIM" \
+                -s format jpeg -s formatOptions "$QUALITY" \
+                "$f" --out "$OUT/memorial-logo.jpg" >/dev/null 2>&1 \
+                && [ -f "$OUT/memorial-logo.jpg" ]; then
+            echo "  logo  -> images/memorial-logo.jpg"
+        else
+            echo "  SKIPPED logo (unreadable): $base" >&2
+        fi
+        continue
+    fi
+
     # When REGENERATE_HERO=true, (re)build memorial-preview.jpg from the matching
     # source. The photo is NOT skipped — it falls through to the gallery below, so the
     # hero photo also appears in the grid and the slideshow.
     if [ "$REGENERATE_HERO" = "true" ] \
-        && { [[ -n "$HERO_SOURCE" && "$base" == "$HERO_SOURCE" ]] \
+        && { [[ -n "$HERO_SOURCE" && "$lower" == "$HERO_SOURCE" ]] \
              || [[ "$lower" == *preview* || "$lower" == *hero* ]]; }; then
         if sips --resampleHeightWidthMax "$MAXDIM" \
                 -s format jpeg -s formatOptions "$QUALITY" \

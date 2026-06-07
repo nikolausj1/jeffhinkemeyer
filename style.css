@@ -342,6 +342,19 @@ h1.name {
     color: var(--secondary-color);
 }
 
+/* Memorial race logo */
+.memorial-logo {
+    margin-top: 18px;
+}
+
+.memorial-logo img {
+    display: block;
+    width: 100%;
+    max-width: 280px;
+    height: auto;
+    border-radius: 6px;
+}
+
 .memorial-buttons {
     display: flex;
     flex-wrap: wrap;
