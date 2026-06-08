@@ -356,7 +356,7 @@ h1.name {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 24px 20px;
-    margin-bottom: 26px;
+    margin: 14px 0 26px;
 }
 
 .stat {
