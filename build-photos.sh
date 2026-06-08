@@ -59,7 +59,7 @@ mkdir -p "$OUT" "$THUMB"
 # Never delete the hero/logo here — a hand-edited memorial-preview.jpg must survive.
 # (-maxdepth 1 so this leaves the thumb/ directory's files to the line below.)
 find "$OUT" -maxdepth 1 -type f \( -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.png' \) \
-    ! -name 'memorial-preview.jpg' ! -name 'memorial-logo.png' -delete
+    ! -name 'memorial-preview.jpg' ! -name 'memorial-logo.png' ! -name '4f-logo.jpg' -delete
 find "$THUMB" -type f \( -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.png' \) -delete
 
 slugify() {
