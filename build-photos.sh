@@ -17,10 +17,16 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 SRC="$SCRIPT_DIR/../source photos"
 OUT="$SCRIPT_DIR/images"
+THUMB="$OUT/thumb"
 JS="$SCRIPT_DIR/script.js"
 
-MAXDIM=1600   # longest edge, in pixels
-QUALITY=80    # JPEG quality (low/normal/high/best or 0-100 via formatOptions)
+MAXDIM=1600   # full image longest edge, in pixels (used by the lightbox + slideshow)
+QUALITY=80    # full image JPEG quality (0-100 via formatOptions)
+
+# Grid thumbnails: the gallery tiles are small 1:1 squares, so they never need the
+# full image. Tiny thumbs keep the grid snappy and the page light.
+THUMB_MAXDIM=560
+THUMB_QUALITY=72
 
 # Hero / social-preview image. The hero photo ALSO appears in the gallery grid
 # (and therefore the slideshow) — it is never excluded.
@@ -47,14 +53,14 @@ if [ ! -d "$SRC" ]; then
     exit 1
 fi
 
-mkdir -p "$OUT"
+mkdir -p "$OUT" "$THUMB"
 
 # Start clean so removed source photos don't linger in the gallery.
-# Never delete the hero here — a hand-edited memorial-preview.jpg must survive.
-find "$OUT" -type f \( -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.png' \) \
+# Never delete the hero/logo here — a hand-edited memorial-preview.jpg must survive.
+# (-maxdepth 1 so this leaves the thumb/ directory's files to the line below.)
+find "$OUT" -maxdepth 1 -type f \( -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.png' \) \
     ! -name 'memorial-preview.jpg' ! -name 'memorial-logo.png' -delete
-
-shopt -s nullglob nocaseglob
+find "$THUMB" -type f \( -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.png' \) -delete
 
 slugify() {
     # lowercase, strip extension, replace non-alphanumerics with single dashes
@@ -69,7 +75,10 @@ gallery=()
 count=0
 hero_done=0
 
-for f in "$SRC"/*.jpg "$SRC"/*.jpeg "$SRC"/*.png; do
+# Recurse so subfolders (e.g. batch2/) are included. NUL-delimited + process
+# substitution keeps the loop in the main shell so the gallery array survives
+# (a `find | while` pipe would build it in a subshell and lose it).
+while IFS= read -r -d '' f; do
     [ -e "$f" ] || continue
     base="$(basename "$f")"
     lower="$(printf '%s' "$base" | tr '[:upper:]' '[:lower:]')"
@@ -130,20 +139,26 @@ for f in "$SRC"/*.jpg "$SRC"/*.jpeg "$SRC"/*.png; do
     if [ "$ext" = "png" ]; then
         sips --resampleHeightWidthMax "$MAXDIM" \
              "$f" --out "$OUT/$out_name" >/dev/null 2>&1 || true
+        # matching grid thumbnail (kept as png to preserve the same filename)
+        sips --resampleHeightWidthMax "$THUMB_MAXDIM" \
+             "$f" --out "$THUMB/$out_name" >/dev/null 2>&1 || true
     else
         sips --resampleHeightWidthMax "$MAXDIM" \
              -s format jpeg -s formatOptions "$QUALITY" \
              "$f" --out "$OUT/$out_name" >/dev/null 2>&1 || true
+        sips --resampleHeightWidthMax "$THUMB_MAXDIM" \
+             -s format jpeg -s formatOptions "$THUMB_QUALITY" \
+             "$f" --out "$THUMB/$out_name" >/dev/null 2>&1 || true
     fi
 
-    # Only list photos that actually produced an output file.
-    if [ -f "$OUT/$out_name" ]; then
+    # Only list photos that actually produced both a full image and a thumbnail.
+    if [ -f "$OUT/$out_name" ] && [ -f "$THUMB/$out_name" ]; then
         gallery+=("$out_name")
         count=$((count + 1))
     else
         echo "  SKIPPED (unreadable): $base" >&2
     fi
-done
+done < <(find "$SRC" -type f ! -name '._*' \( -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.png' -o -iname '*.heic' \) -print0)
 
 echo "Processed $count gallery photo(s)."
 if [ "$hero_done" -eq 0 ]; then
