@@ -185,6 +185,18 @@ h1.name {
     color: var(--accent-color);
 }
 
+.pull-quote .quote-attr {
+    display: block;
+    margin-top: 22px;
+    font-family: var(--font-body);
+    font-style: normal;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--secondary-color);
+}
+
 /* Gallery Grid */
 .gallery-section {
     padding: 60px 0;
