@@ -46,7 +46,7 @@ LOGO_MAXDIM=900
 
 # Source files to ignore completely — not the gallery, not the hero, not the logo.
 # Use for leftover/superseded assets. Lowercase names, matched case-insensitively.
-IGNORE_SOURCES=("memorial.jpg")
+IGNORE_SOURCES=("memorial.jpg" "687029874_3921880344781525_512658489254298672_n.jpg")
 
 if [ ! -d "$SRC" ]; then
     echo "Source folder not found: $SRC" >&2
