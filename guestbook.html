@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Share a Memory of Jeff — Jeffrey G. Hinkemeyer</title>
+
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="guestbook-page">
+    <main class="gb-wrap">
+        <header class="gb-header">
+            <span class="intro-text">In Loving Memory</span>
+            <h1 class="gb-title">Share a Memory of Jeff</h1>
+            <p class="gb-sub">Leave a note, a memory, or a few words for the family. Your message will appear here
+                &mdash; and on the screen at his Celebration of Life.</p>
+        </header>
+
+        <form id="gb-form" class="gb-form" autocomplete="off">
+            <label class="gb-label" for="gb-name">Your name</label>
+            <input class="gb-input" id="gb-name" name="name" type="text" maxlength="60" required
+                placeholder="Your name">
+
+            <label class="gb-label" for="gb-message">Your message</label>
+            <textarea class="gb-input gb-textarea" id="gb-message" name="message" maxlength="600" rows="4" required
+                placeholder="A memory, a story, or a few words for Jeff and his family&hellip;"></textarea>
+
+            <!-- Honeypot: hidden from people, catches bots. Do not remove. -->
+            <div class="gb-hp" aria-hidden="true">
+                <label>Website<input type="text" name="website" tabindex="-1" autocomplete="off"></label>
+            </div>
+
+            <button class="btn-obituary gb-submit" type="submit" id="gb-submit">Share Memory</button>
+            <p class="gb-status" id="gb-status" role="status" aria-live="polite"></p>
+        </form>
+
+        <section class="gb-wall" aria-label="Messages">
+            <h2 class="gb-wall-title" id="gb-wall-title">Memories</h2>
+            <div id="gb-list" class="gb-list"></div>
+        </section>
+
+        <footer class="gb-foot">
+            <a href="/" class="gb-home-link">&larr; Back to Jeff&rsquo;s memorial</a>
+        </footer>
+    </main>
+
+    <script src="guestbook.js"></script>
+</body>
+
+</html>

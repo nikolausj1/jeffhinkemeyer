@@ -611,3 +611,326 @@ footer {
         font-size: 3.5rem;
     }
 }
+/* ============================================================
+   Guest book: in-slideshow message card, guest book page, control page
+   ============================================================ */
+
+/* Message slide shown between photos during the slideshow */
+.message-slide {
+    display: none;
+    max-width: 900px;
+    padding: 0 8vw;
+    text-align: center;
+}
+
+.message-slide.active {
+    display: block;
+}
+
+.message-slide-mark {
+    display: block;
+    font-family: var(--font-heading);
+    font-size: 5rem;
+    line-height: 0.4;
+    color: var(--accent-color);
+    margin-bottom: 34px;
+}
+
+.message-slide-text {
+    font-family: var(--font-heading);
+    font-style: italic;
+    font-size: clamp(1.6rem, 3.8vw, 3rem);
+    line-height: 1.42;
+    color: var(--primary-color);
+    margin-bottom: 30px;
+}
+
+.message-slide-name {
+    font-family: var(--font-body);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--secondary-color);
+}
+
+/* Guest book page */
+.guestbook-page {
+    background-color: var(--bg-color);
+}
+
+.gb-wrap {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 50px 22px 70px;
+}
+
+.gb-header {
+    text-align: center;
+    margin-bottom: 36px;
+}
+
+.gb-title {
+    font-family: var(--font-heading);
+    font-size: 2.3rem;
+    font-weight: 400;
+    color: var(--primary-color);
+    margin: 8px 0 16px;
+    line-height: 1.15;
+}
+
+.gb-sub {
+    color: var(--secondary-color);
+    font-size: 1rem;
+    line-height: 1.6;
+}
+
+.gb-form {
+    background-color: var(--card-bg);
+    padding: 28px 24px;
+    border-radius: 14px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
+    margin-bottom: 46px;
+}
+
+.gb-label {
+    display: block;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-weight: 600;
+    color: #8C6A3E;
+    margin: 0 0 8px;
+}
+
+.gb-input {
+    width: 100%;
+    font-family: var(--font-body);
+    font-size: 1rem;
+    color: var(--primary-color);
+    background: #fff;
+    border: 1px solid #E2E2E2;
+    border-radius: 8px;
+    padding: 12px 14px;
+    margin-bottom: 20px;
+    transition: border-color 0.2s ease;
+}
+
+.gb-input:focus {
+    outline: none;
+    border-color: var(--accent-color);
+}
+
+.gb-textarea {
+    resize: vertical;
+    min-height: 110px;
+    line-height: 1.5;
+}
+
+/* Honeypot — visually hidden, but present for bots to trip on */
+.gb-hp {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+}
+
+.gb-submit {
+    width: 100%;
+    border: none;
+    cursor: pointer;
+    font-family: var(--font-body);
+}
+
+.gb-submit:disabled {
+    opacity: 0.6;
+    cursor: default;
+}
+
+.gb-status {
+    min-height: 1.2em;
+    margin-top: 14px;
+    text-align: center;
+    font-size: 0.95rem;
+    color: var(--secondary-color);
+}
+
+.gb-status.error {
+    color: #b3261e;
+}
+
+.gb-status.success {
+    color: #2e7d32;
+}
+
+.gb-wall-title {
+    font-family: var(--font-heading);
+    font-size: 1.5rem;
+    font-weight: 400;
+    color: var(--primary-color);
+    text-align: center;
+    margin-bottom: 24px;
+}
+
+.gb-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.gb-card {
+    background-color: var(--card-bg);
+    border-radius: 12px;
+    padding: 22px 22px 18px;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
+}
+
+.gb-card-message {
+    font-size: 1.05rem;
+    line-height: 1.6;
+    color: var(--primary-color);
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    margin-bottom: 14px;
+}
+
+.gb-card-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.gb-card-name {
+    font-family: var(--font-heading);
+    font-style: italic;
+    font-size: 1.05rem;
+    color: var(--primary-color);
+}
+
+.gb-card-time {
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--secondary-color);
+}
+
+.gb-empty {
+    text-align: center;
+    color: var(--secondary-color);
+    font-style: italic;
+}
+
+.gb-foot {
+    text-align: center;
+    margin-top: 44px;
+}
+
+.gb-home-link {
+    font-size: 0.9rem;
+    color: var(--secondary-color);
+}
+
+.gb-home-link:hover {
+    color: var(--accent-color);
+}
+
+/* Control page */
+.control-page {
+    background-color: var(--bg-color);
+}
+
+.ctl-wrap {
+    max-width: 620px;
+    margin: 0 auto;
+    padding: 36px 20px 70px;
+}
+
+.ctl-title {
+    font-family: var(--font-heading);
+    font-size: 1.8rem;
+    font-weight: 400;
+    color: var(--primary-color);
+    margin-bottom: 8px;
+}
+
+.ctl-note {
+    color: var(--secondary-color);
+    font-size: 0.92rem;
+    line-height: 1.5;
+    margin-bottom: 22px;
+}
+
+.ctl-toggles {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 34px;
+}
+
+.ctl-toggle {
+    flex: 1 1 200px;
+    padding: 14px 18px;
+    border: 1px solid #DADADA;
+    background: #fff;
+    border-radius: 10px;
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--primary-color);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.ctl-toggle.active {
+    background: #b3261e;
+    border-color: #b3261e;
+    color: #fff;
+}
+
+.ctl-subtitle {
+    font-family: var(--font-heading);
+    font-size: 1.3rem;
+    font-weight: 400;
+    color: var(--primary-color);
+    margin-bottom: 18px;
+}
+
+.ctl-list {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.ctl-card {
+    background-color: var(--card-bg);
+    border-radius: 12px;
+    padding: 18px;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
+}
+
+.ctl-del {
+    margin-top: 12px;
+    padding: 8px 18px;
+    border: 1px solid #e0b4b0;
+    background: #fff;
+    color: #b3261e;
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.ctl-del:hover {
+    background: #b3261e;
+    color: #fff;
+    border-color: #b3261e;
+}
+
+.ctl-del:disabled {
+    opacity: 0.5;
+    cursor: default;
+}

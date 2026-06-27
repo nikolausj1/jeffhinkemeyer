@@ -192,9 +192,22 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentIndex = 0;
 
     // Slideshow state
-    const SLIDE_INTERVAL = 5000; // 5 seconds per photo
+    const PHOTO_MS = 5000;            // a photo stays up this long
+    const MESSAGE_MS = 8000;          // a guest-book message stays up longer (to read)
+    const MESSAGE_EVERY = 5;          // show a message after this many photos
+    const GUESTBOOK_POLL_MS = 30000;  // re-check for new messages this often
     let slideshowTimer = null;
+    let slideshowPoll = null;
     let slideshowActive = false;
+    let photoIndex = 0;
+    let photosSinceMessage = 0;
+    let messageIndex = 0;
+    let gbMessages = [];
+    let gbHidden = false;
+
+    const messageSlide = document.getElementById('message-slide');
+    const messageSlideText = document.getElementById('message-slide-text');
+    const messageSlideName = document.getElementById('message-slide-name');
 
     // Populate gallery
     images.forEach((img, index) => {
@@ -226,7 +239,24 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 300);
     }
 
+    function showPhotoMode() {
+        if (messageSlide) {
+            messageSlide.classList.remove('active');
+            messageSlide.setAttribute('aria-hidden', 'true');
+        }
+        lightboxImg.style.display = '';
+    }
+
+    function showMessageMode() {
+        lightboxImg.style.display = 'none';
+        if (messageSlide) {
+            messageSlide.classList.add('active');
+            messageSlide.setAttribute('aria-hidden', 'false');
+        }
+    }
+
     function updateLightboxImage() {
+        showPhotoMode();
         lightboxImg.style.opacity = '0.5';
         setTimeout(() => {
             const currentImg = new Image();
@@ -265,11 +295,55 @@ document.addEventListener('DOMContentLoaded', () => {
         updateLightboxImage();
     }
 
+    // Pull approved guest-book messages so the slideshow can weave them in.
+    async function pollGuestbook() {
+        try {
+            const r = await fetch('/api/guestbook', { headers: { 'Accept': 'application/json' } });
+            const data = await r.json();
+            gbMessages = Array.isArray(data.messages) ? data.messages : [];
+            gbHidden = !!data.hidden;
+        } catch (e) {
+            // network hiccup — the slideshow just keeps showing photos
+        }
+    }
+
+    function showSlideshowPhoto() {
+        activeList = images;
+        currentIndex = photoIndex % images.length;
+        updateLightboxImage();
+        photoIndex = (photoIndex + 1) % images.length;
+        photosSinceMessage += 1;
+    }
+
+    function showSlideshowMessage() {
+        const msg = gbMessages[messageIndex % gbMessages.length];
+        messageIndex = (messageIndex + 1) % gbMessages.length;
+        messageSlideText.textContent = msg.message;
+        messageSlideName.textContent = '— ' + msg.name;
+        showMessageMode();
+        photosSinceMessage = 0;
+    }
+
+    // Decide the next slide: weave in a message after every MESSAGE_EVERY photos.
+    function slideshowAdvance() {
+        if (!slideshowActive) return;
+        const haveMessages = !gbHidden && gbMessages.length > 0;
+        if (haveMessages && photosSinceMessage >= MESSAGE_EVERY) {
+            showSlideshowMessage();
+            slideshowTimer = setTimeout(slideshowAdvance, MESSAGE_MS);
+        } else {
+            showSlideshowPhoto();
+            slideshowTimer = setTimeout(slideshowAdvance, PHOTO_MS);
+        }
+    }
+
     // Slideshow: full-screen, auto-advancing loop for casting to a TV.
     function startSlideshow() {
         slideshowActive = true;
+        photoIndex = 0; photosSinceMessage = 0; messageIndex = 0;
         lightbox.classList.add('slideshow-mode');
-        openLightbox(0, slideshowImages);
+        openLightbox(0, images);        // first photo
+        photoIndex = 1; photosSinceMessage = 1;
 
         // Request full-screen where supported (desktop browsers). Harmless
         // no-op on iOS Safari, where the lightbox already fills the viewport.
@@ -279,15 +353,22 @@ document.addEventListener('DOMContentLoaded', () => {
             try { req.call(el); } catch (err) { /* ignore */ }
         }
 
-        clearInterval(slideshowTimer);
-        slideshowTimer = setInterval(showNext, SLIDE_INTERVAL);
+        pollGuestbook();
+        clearInterval(slideshowPoll);
+        slideshowPoll = setInterval(pollGuestbook, GUESTBOOK_POLL_MS);
+
+        clearTimeout(slideshowTimer);
+        slideshowTimer = setTimeout(slideshowAdvance, PHOTO_MS);
     }
 
     function stopSlideshow() {
         if (!slideshowActive) return;
         slideshowActive = false;
-        clearInterval(slideshowTimer);
+        clearTimeout(slideshowTimer);
         slideshowTimer = null;
+        clearInterval(slideshowPoll);
+        slideshowPoll = null;
+        showPhotoMode();
         lightbox.classList.remove('slideshow-mode');
         if (document.fullscreenElement || document.webkitFullscreenElement) {
             const exit = document.exitFullscreen || document.webkitExitFullscreen;

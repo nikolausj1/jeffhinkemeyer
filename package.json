@@ -1,0 +1,9 @@
+{
+  "name": "jeffhinkemeyer-site",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Memorial site for Jeffrey G. Hinkemeyer — static site + guest book API",
+  "dependencies": {
+    "@upstash/redis": "^1.34.3"
+  }
+}

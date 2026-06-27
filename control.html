@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Guest Book Control</title>
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Playfair+Display:wght@400;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="control-page">
+    <main class="ctl-wrap">
+        <h1 class="ctl-title">Guest Book Control</h1>
+        <p class="ctl-note" id="ctl-note">Your emergency brake. Messages post automatically — only use this if
+            something needs to come down.</p>
+
+        <div class="ctl-toggles">
+            <button class="ctl-toggle" id="ctl-hide" type="button">Hide messages on TV</button>
+            <button class="ctl-toggle" id="ctl-close" type="button">Close guest book</button>
+        </div>
+
+        <h2 class="ctl-subtitle">Messages</h2>
+        <div id="ctl-list" class="ctl-list"></div>
+    </main>
+
+    <script>
+        (function () {
+            // Secret key comes from the URL fragment: control.html#key=XXXX  (not sent to the server in logs)
+            function getKey() {
+                const h = location.hash.replace(/^#/, '');
+                const p = new URLSearchParams(h);
+                return p.get('key') || '';
+            }
+            let KEY = getKey();
+            const listEl = document.getElementById('ctl-list');
+            const noteEl = document.getElementById('ctl-note');
+            const hideBtn = document.getElementById('ctl-hide');
+            const closeBtn = document.getElementById('ctl-close');
+            let flags = { hidden: false, closed: false };
+
+            if (!KEY) {
+                KEY = prompt('Enter the control key:') || '';
+                if (KEY) location.hash = 'key=' + encodeURIComponent(KEY);
+            }
+
+            function api(method, body) {
+                return fetch('/api/control?key=' + encodeURIComponent(KEY), {
+                    method,
+                    headers: body ? { 'Content-Type': 'application/json' } : undefined,
+                    body: body ? JSON.stringify(body) : undefined,
+                });
+            }
+
+            function timeStr(ts) {
+                try { return new Date(ts).toLocaleString(); } catch (e) { return ''; }
+            }
+
+            function renderFlags() {
+                hideBtn.textContent = flags.hidden ? 'Show messages on TV' : 'Hide messages on TV';
+                hideBtn.classList.toggle('active', flags.hidden);
+                closeBtn.textContent = flags.closed ? 'Reopen guest book' : 'Close guest book';
+                closeBtn.classList.toggle('active', flags.closed);
+            }
+
+            function render(messages) {
+                listEl.textContent = '';
+                if (!messages.length) {
+                    const e = document.createElement('p'); e.className = 'gb-empty';
+                    e.textContent = 'No messages yet.'; listEl.appendChild(e); return;
+                }
+                messages.forEach((m) => {
+                    const card = document.createElement('div');
+                    card.className = 'ctl-card';
+                    const body = document.createElement('p'); body.className = 'gb-card-message';
+                    body.textContent = m.message;
+                    const meta = document.createElement('div'); meta.className = 'gb-card-meta';
+                    const nm = document.createElement('span'); nm.className = 'gb-card-name'; nm.textContent = m.name;
+                    const tm = document.createElement('span'); tm.className = 'gb-card-time'; tm.textContent = timeStr(m.ts);
+                    meta.appendChild(nm); meta.appendChild(tm);
+                    const del = document.createElement('button');
+                    del.className = 'ctl-del'; del.type = 'button'; del.textContent = 'Delete';
+                    del.addEventListener('click', async () => {
+                        if (!confirm('Delete this message?')) return;
+                        del.disabled = true;
+                        await api('POST', { action: 'delete', id: m.id });
+                        load();
+                    });
+                    card.appendChild(body); card.appendChild(meta); card.appendChild(del);
+                    listEl.appendChild(card);
+                });
+            }
+
+            async function load() {
+                try {
+                    const r = await api('GET');
+                    if (r.status === 401) { noteEl.textContent = 'Wrong control key. Reload with the correct key.'; return; }
+                    const data = await r.json();
+                    flags = data.flags || flags;
+                    renderFlags();
+                    render(Array.isArray(data.messages) ? data.messages : []);
+                } catch (e) { /* ignore */ }
+            }
+
+            hideBtn.addEventListener('click', async () => {
+                await api('POST', { action: 'hide', value: !flags.hidden }); load();
+            });
+            closeBtn.addEventListener('click', async () => {
+                await api('POST', { action: 'close', value: !flags.closed }); load();
+            });
+
+            if (KEY) { load(); setInterval(load, 15000); }
+        })();
+    </script>
+</body>
+
+</html>
