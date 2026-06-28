@@ -299,14 +299,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 const aspectRatio = currentImg.width / currentImg.height;
                 const viewRatio = window.innerWidth / window.innerHeight;
 
-                // Ensure image is at least 80% of the screen
+                // Fill most of the screen (less padding around the photo)
                 if (aspectRatio > viewRatio) {
                     // Landscape relative to screen
-                    lightboxImg.style.width = '80vw';
+                    lightboxImg.style.width = '94vw';
                     lightboxImg.style.height = 'auto';
                 } else {
                     // Portrait relative to screen
-                    lightboxImg.style.height = '80vh';
+                    lightboxImg.style.height = '94vh';
                     lightboxImg.style.width = 'auto';
                 }
 
