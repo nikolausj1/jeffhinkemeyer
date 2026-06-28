@@ -48,6 +48,16 @@ LOGO_MAXDIM=900
 # Use for leftover/superseded assets. Lowercase names, matched case-insensitively.
 IGNORE_SOURCES=("memorial.jpg" "687029874_3921880344781525_512658489254298672_n.jpg")
 
+# Photos removed from the gallery by output slug (matches regardless of the source
+# filename). Add a gallery photo's slug here to keep it out on future rebuilds.
+IGNORE_SLUGS=(
+    "686200250-3921880144781545-147043869614871148-n"
+    "685111926-3921880001448226-623966192669093632-n"
+    "687689605-3921880268114866-4622301868541587104-n"
+    "img-0163" "img-2414" "img-3538" "img-4396" "img-5516"
+    "img-7044" "img-7080" "img-7190" "img-9960"
+)
+
 if [ ! -d "$SRC" ]; then
     echo "Source folder not found: $SRC" >&2
     exit 1
@@ -125,6 +135,12 @@ while IFS= read -r -d '' f; do
     fi
 
     slug="$(slugify "$base")"
+
+    # Skip photos that were explicitly removed from the gallery.
+    for ig in "${IGNORE_SLUGS[@]}"; do
+        [[ "$slug" == "$ig" ]] && { echo "  skip  -> $base (removed slug $slug)"; continue 2; }
+    done
+
     ext="jpg"
     case "$lower" in
         *.png) ext="png" ;;
