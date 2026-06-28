@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Sign the Guest Book — Jeffrey G. Hinkemeyer</title>
+
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap"
+        rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-color: #333333;
+            --secondary-color: #666666;
+            --accent-color: #C5A059;
+            --accent-deep: #8C6A3E;
+            --bg-color: #F9F9F9;
+            --card-bg: #FFFFFF;
+            --font-heading: 'Playfair Display', serif;
+            --font-body: 'Lato', sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html,
+        body {
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        body {
+            font-family: var(--font-body);
+            color: var(--primary-color);
+            background:
+                radial-gradient(circle at 50% 0%, #ffffff 0%, var(--bg-color) 60%, #f0ece4 100%);
+            -webkit-font-smoothing: antialiased;
+            text-rendering: optimizeLegibility;
+            /* No text selection / callout on a kiosk display */
+            -webkit-user-select: none;
+            user-select: none;
+            -webkit-touch-callout: none;
+        }
+
+        .stage {
+            height: 100%;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: clamp(2rem, 6vw, 6rem);
+            padding: clamp(2rem, 5vmin, 5rem);
+        }
+
+        /* ---- Text column ---- */
+        .copy {
+            display: flex;
+            flex-direction: column;
+            max-width: 16em;
+        }
+
+        .intro-text {
+            font-size: clamp(0.8rem, 1.6vmin, 1.15rem);
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: var(--accent-deep);
+            font-weight: 600;
+            margin-bottom: 0.9em;
+        }
+
+        .headline {
+            font-family: var(--font-heading);
+            font-weight: 600;
+            line-height: 1.05;
+            font-size: clamp(2.4rem, 6.5vmin, 5rem);
+            color: var(--primary-color);
+            margin-bottom: 0.4em;
+        }
+
+        .rule {
+            width: 64px;
+            height: 2px;
+            background: var(--accent-color);
+            margin: 0.2em 0 1em;
+        }
+
+        .lead {
+            font-size: clamp(1.1rem, 2.4vmin, 1.9rem);
+            font-weight: 400;
+            line-height: 1.4;
+            color: var(--primary-color);
+        }
+
+        .lead strong {
+            font-weight: 700;
+        }
+
+        .subtext {
+            margin-top: 1.2em;
+            font-size: clamp(0.95rem, 1.8vmin, 1.35rem);
+            line-height: 1.5;
+            color: var(--secondary-color);
+        }
+
+        .subtext .tv {
+            color: var(--accent-deep);
+            font-weight: 700;
+        }
+
+        /* ---- QR column ---- */
+        .qr-card {
+            background: var(--card-bg);
+            border-radius: 28px;
+            padding: clamp(1.2rem, 3vmin, 2.6rem);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.12);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        .qr-card img {
+            display: block;
+            width: clamp(220px, 38vmin, 520px);
+            height: clamp(220px, 38vmin, 520px);
+            image-rendering: pixelated;
+        }
+
+        .qr-caption {
+            margin-top: 0.9em;
+            font-size: clamp(0.85rem, 1.6vmin, 1.2rem);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 700;
+            color: var(--accent-deep);
+        }
+
+        /* ---- Landscape (iPad horizontal): side by side ---- */
+        @media (orientation: landscape) {
+            .stage {
+                flex-direction: row;
+            }
+
+            .copy {
+                text-align: left;
+            }
+
+            .rule {
+                margin-left: 0;
+            }
+
+            .qr-card img {
+                width: clamp(320px, 62vmin, 760px);
+                height: clamp(320px, 62vmin, 760px);
+            }
+        }
+
+        /* ---- Portrait (iPad vertical): stacked ---- */
+        @media (orientation: portrait) {
+            .stage {
+                flex-direction: column;
+                gap: clamp(2.5rem, 6vh, 5rem);
+            }
+
+            .copy {
+                text-align: center;
+                align-items: center;
+                max-width: 22em;
+            }
+
+            .rule {
+                margin-left: auto;
+                margin-right: auto;
+            }
+
+            .qr-card img {
+                width: clamp(240px, 48vmin, 560px);
+                height: clamp(240px, 48vmin, 560px);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="stage">
+        <div class="copy">
+            <span class="intro-text">In Loving Memory of Jeff</span>
+            <h1 class="headline">Sign the Guest Book</h1>
+            <div class="rule"></div>
+            <p class="lead">
+                <strong>Scan the QR code</strong> with your phone&rsquo;s camera to
+                leave a memory, a story, or a few words for the family.
+            </p>
+            <p class="subtext">
+                Your message will appear in the <span class="tv">slideshow on the TV</span>
+                for everyone to share.
+            </p>
+        </div>
+
+        <div class="qr-card">
+            <img src="/guestbook-qr.svg" alt="QR code linking to the guest book">
+            <div class="qr-caption">Point &amp; Scan</div>
+        </div>
+    </div>
+</body>
+
+</html>
