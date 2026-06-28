@@ -653,6 +653,36 @@ footer {
     color: #c9b182;
 }
 
+/* Guest book section on the main page */
+.guestbook-section {
+    padding: 70px 0 30px;
+}
+
+.gb-inner {
+    max-width: 640px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.gb-inner h2 {
+    font-family: var(--font-heading);
+    font-size: 2rem;
+    font-weight: 400;
+    color: var(--primary-color);
+    margin-bottom: 18px;
+}
+
+.gb-section-sub {
+    color: var(--secondary-color);
+    font-size: 1rem;
+    line-height: 1.6;
+    margin-bottom: 36px;
+}
+
+.gb-inner .gb-form {
+    text-align: left;
+}
+
 /* Guest book page */
 .guestbook-page {
     background-color: var(--bg-color);

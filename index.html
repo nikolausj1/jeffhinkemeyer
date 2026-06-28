@@ -187,6 +187,41 @@
             </div>
         </section>
 
+        <section class="guestbook-section">
+            <div class="container">
+                <div class="gb-inner">
+                    <span class="card-subtitle">Leave a Note for the Family</span>
+                    <h2>Guest Book</h2>
+                    <p class="gb-section-sub">Share a memory, a story, or a few words for Jeff and his family. Your
+                        message will appear here &mdash; and on the screen at his Celebration of Life.</p>
+
+                    <form id="gb-form" class="gb-form" autocomplete="off">
+                        <label class="gb-label" for="gb-name">Your name</label>
+                        <input class="gb-input" id="gb-name" name="name" type="text" maxlength="60" required
+                            placeholder="Your name">
+
+                        <label class="gb-label" for="gb-message">Your message</label>
+                        <textarea class="gb-input gb-textarea" id="gb-message" name="message" maxlength="600" rows="4"
+                            required
+                            placeholder="A memory, a story, or a few words for Jeff and his family&hellip;"></textarea>
+
+                        <!-- Honeypot: hidden from people, catches bots. Do not remove. -->
+                        <div class="gb-hp" aria-hidden="true">
+                            <label>Website<input type="text" name="website" tabindex="-1" autocomplete="off"></label>
+                        </div>
+
+                        <button class="btn-obituary gb-submit" type="submit" id="gb-submit">Share Memory</button>
+                        <p class="gb-status" id="gb-status" role="status" aria-live="polite"></p>
+                    </form>
+
+                    <section class="gb-wall" aria-label="Messages">
+                        <h2 class="gb-wall-title" id="gb-wall-title">Memories</h2>
+                        <div id="gb-list" class="gb-list"></div>
+                    </section>
+                </div>
+            </div>
+        </section>
+
         <section class="gallery-section">
             <div class="container">
                 <div id="gallery-grid" class="gallery-grid">
@@ -218,6 +253,7 @@
     </div>
 
     <script src="script.js"></script>
+    <script src="guestbook.js"></script>
 </body>
 
 </html>
