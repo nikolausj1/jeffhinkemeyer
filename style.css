@@ -659,7 +659,7 @@ footer {
 }
 
 .gb-inner {
-    max-width: 640px;
+    max-width: 940px;
     margin: 0 auto;
     text-align: center;
 }
@@ -673,14 +673,38 @@ footer {
 }
 
 .gb-section-sub {
+    max-width: 640px;
+    margin: 0 auto 36px;
     color: var(--secondary-color);
     font-size: 1rem;
     line-height: 1.6;
-    margin-bottom: 36px;
 }
 
+/* Keep the form a comfortable single-column width, centered */
 .gb-inner .gb-form {
+    max-width: 640px;
+    margin-left: auto;
+    margin-right: auto;
     text-align: left;
+}
+
+/* Memories wall: two masonry-style columns when there's room */
+.guestbook-section .gb-list {
+    display: block;
+    column-count: 2;
+    column-gap: 16px;
+    text-align: left;
+}
+
+.guestbook-section .gb-card {
+    margin-bottom: 16px;
+    break-inside: avoid;
+}
+
+@media (max-width: 700px) {
+    .guestbook-section .gb-list {
+        column-count: 1;
+    }
 }
 
 /* Guest book page */
